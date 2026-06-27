@@ -44,7 +44,7 @@ Stores customer information such as:
 * Name
 * Email
 * City
-* Account creation date
+* Account Creation Date
 
 ### Products
 
@@ -79,7 +79,16 @@ The database is automatically seeded with:
 
 ## Project Setup
 
-### Backend Setup
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Elone-debug/natural-language-to-sql-engine.git
+cd natural-language-to-sql-engine
+```
+
+---
+
+## Backend Setup
 
 Open the first terminal and execute:
 
@@ -100,7 +109,11 @@ Create a new `.env` file by copying the example file:
 Copy-Item .env.example .env
 ```
 
-Open the newly created `.env` file and add your Groq API key:
+### Groq API Key Setup
+
+This project uses the Groq API to convert natural language questions into SQL queries.
+
+Before running the application, create a free Groq API key from https://console.groq.com/ and add it to the `.env` file:
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
@@ -108,9 +121,11 @@ GROQ_MODEL=llama-3.3-70b-versatile
 PORT=5000
 ```
 
-**Note:** The `.env` file is intentionally excluded from version control for security reasons. Only `.env.example` is included in the repository.
+**Note:** The repository only contains `.env.example`. Users must create their own `.env` file and provide their personal API key before running the application. The actual `.env` file is excluded from version control for security reasons.
 
-### Database Setup
+---
+
+## Database Setup
 
 Seed the database with sample data:
 
@@ -118,7 +133,9 @@ Seed the database with sample data:
 python seed.py
 ```
 
-### Start Backend Server
+---
+
+## Start Backend Server
 
 ```powershell
 python app.py
@@ -150,37 +167,33 @@ The frontend application runs on:
 http://localhost:5173
 ```
 
+The frontend communicates with the Flask backend through API endpoints.
+
 ---
 
 ## Running the Application
 
 Both servers must be running simultaneously.
 
-### Terminal 1
-
-Run the Flask backend:
+### Terminal 1 - Backend
 
 ```powershell
 cd backend
 python app.py
 ```
 
-### Terminal 2
-
-Run the React frontend:
+### Terminal 2 - Frontend
 
 ```powershell
 cd frontend
 npm run dev
 ```
 
-After both servers start successfully, open:
+After both servers start successfully, open the following URL in your browser:
 
 ```text
 http://localhost:5173
 ```
-
-in your browser.
 
 ---
 
@@ -219,18 +232,7 @@ Potential enhancements include:
 
 ---
 
-## Repository
-
-Clone the repository using:
-
-```bash
-git clone https://github.com/Elone-debug/natural-language-to-sql-engine.git
-```
-
----
-
 ## Author
 
 **Elbin Sojan**
-
 B.Tech Computer Science Engineering Graduate (2026)
