@@ -1,16 +1,84 @@
 # Natural Language to SQL Engine
 
-A polished full-stack app that turns plain-English questions into safe SQLite queries with Groq, lets users review/edit the SQL, executes it read-only, and displays searchable session history and dynamic results.
+A full-stack AI-powered application that enables users to query a relational database using plain English. The system leverages a Large Language Model (Groq LLM API) to dynamically generate SQL queries, execute them against a real SQLite database, and present the results through an interactive web interface.
 
-## Stack
+The application allows users to:
 
-- React 19, Vite, Tailwind CSS, Axios
-- Flask, Flask-CORS, SQLite
-- Groq API
+* Enter natural language questions.
+* View and optionally edit the generated SQL query.
+* Execute read-only SQL queries against a real database.
+* Visualize query results in a dynamic table.
+* Access query history during the current session.
+* Explore the database schema through a dedicated schema explorer.
 
-## Setup
+---
+
+## Technologies Used
+
+### Frontend
+
+* React 19
+* Vite
+* Tailwind CSS
+* Axios
 
 ### Backend
+
+* Flask
+* Flask-CORS
+* SQLite
+* Groq API (LLM for SQL generation)
+
+---
+
+## Database Schema
+
+The application uses a realistic e-commerce database consisting of three related tables:
+
+### Customers
+
+Stores customer information such as:
+
+* Customer ID
+* Name
+* Email
+* City
+* Account creation date
+
+### Products
+
+Stores product details including:
+
+* Product ID
+* Product name
+* Category
+* Price
+* Stock quantity
+
+### Orders
+
+Stores purchase transactions:
+
+* Order ID
+* Customer ID (Foreign Key)
+* Product ID (Foreign Key)
+* Quantity
+* Order total
+* Order date
+
+Sample dataset:
+
+* 60 Customers
+* 60 Products
+* 120 Orders
+
+---
+
+## Project Setup
+
+### Backend Setup
+
+Open the first terminal and execute:
 
 ```powershell
 cd backend
@@ -18,14 +86,39 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item .env.example .env
-# Add your GROQ_API_KEY to .env
+```
+
+Update the `.env` file with your Groq API key:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+Seed the database:
+
+```powershell
 python seed.py
+```
+
+Start the Flask server:
+
+```powershell
 python app.py
 ```
 
-The API runs at `http://localhost:5000`. The database is seeded automatically on first startup if missing. Re-run `python seed.py` to reset it.
+The backend server runs on:
 
-### Frontend
+```text
+http://localhost:5000
+```
+
+---
+
+### Frontend Setup
+
+Open a second terminal while keeping the backend terminal running.
+
+Execute:
 
 ```powershell
 cd frontend
@@ -33,18 +126,63 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. Vite proxies `/api` to Flask. For a separately hosted API, set `VITE_API_URL=http://localhost:5000` in `frontend/.env`.
+The frontend application runs on:
 
-## Environment variables
+```text
+http://localhost:5173
+```
 
-| Variable | Required | Default | Purpose |
-|---|---:|---|---|
-| `GROQ_API_KEY` | Yes | — | Groq authentication |
-| `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | Model used for SQL generation |
-| `PORT` | No | `5000` | Flask port |
-| `FLASK_DEBUG` | No | `0` | Set to `1` for debug mode |
-| `VITE_API_URL` | No | `/api` | Frontend API base URL |
+The frontend communicates with the Flask backend through API endpoints.
 
-## Safety and trade-offs
+---
 
-Execution is intentionally separate from generation. SQL must begin with `SELECT` or `WITH`, prohibited write/DDL keywords and multiple statements are rejected, SQLite is opened read-only with `query_only`, and responses are capped at 1,000 rows. Database errors are logged server-side but replaced with safe messages. The lightweight lexical guard is defense in depth with SQLite read-only mode; a larger deployment could add an AST parser, auth, rate limiting, server-side audit history, and pagination. Browser history persists locally (up to 25 queries).
+## Running the Application
+
+Both servers must be running simultaneously:
+
+* Terminal 1 → Flask Backend (`http://localhost:5000`)
+* Terminal 2 → React Frontend (`http://localhost:5173`)
+
+After starting both servers, open:
+
+```text
+http://localhost:5173
+```
+
+in your browser.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint          | Description                         |
+| ------ | ----------------- | ----------------------------------- |
+| GET    | `/health`         | Checks backend health               |
+| GET    | `/schema`         | Returns database schema             |
+| POST   | `/generate-query` | Generates SQL from natural language |
+| POST   | `/execute-query`  | Executes validated SQL              |
+
+---
+
+## Assumptions and Trade-offs
+
+* Only read-only SQL operations (`SELECT`, `WITH`) are permitted.
+* Data modification statements such as `INSERT`, `UPDATE`, `DELETE`, `DROP`, and `ALTER` are blocked.
+* SQLite is opened in query-only mode for additional security.
+* Query results are limited to 1000 rows to maintain performance.
+* Browser-based session history is maintained locally for the current session.
+
+---
+
+## Future Improvements
+
+Potential enhancements include:
+
+* SQL AST parsing for advanced validation.
+* User authentication and authorization.
+* Query caching for repeated requests.
+* Exporting query results as CSV files.
+* Server-side query history persistence.
+* Pagination for large result sets.
+
+---
