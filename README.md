@@ -2,14 +2,15 @@
 
 A full-stack AI-powered application that enables users to query a relational database using plain English. The system leverages a Large Language Model (Groq LLM API) to dynamically generate SQL queries, execute them against a real SQLite database, and present the results through an interactive web interface.
 
-The application allows users to:
+## Features
 
-* Enter natural language questions.
-* View and optionally edit the generated SQL query.
-* Execute read-only SQL queries against a real database.
-* Visualize query results in a dynamic table.
-* Access query history during the current session.
+* Convert natural language questions into SQL queries.
+* View and optionally edit the generated SQL before execution.
+* Execute read-only SQL queries against a real SQLite database.
+* Display query results in a dynamic and scrollable table.
+* Maintain query history within the current session.
 * Explore the database schema through a dedicated schema explorer.
+* Prevent execution of unsafe SQL operations.
 
 ---
 
@@ -33,7 +34,7 @@ The application allows users to:
 
 ## Database Schema
 
-The application uses a realistic e-commerce database consisting of three related tables:
+The application uses a realistic e-commerce database consisting of three related tables.
 
 ### Customers
 
@@ -50,10 +51,10 @@ Stores customer information such as:
 Stores product details including:
 
 * Product ID
-* Product name
+* Product Name
 * Category
 * Price
-* Stock quantity
+* Stock Quantity
 
 ### Orders
 
@@ -63,10 +64,12 @@ Stores purchase transactions:
 * Customer ID (Foreign Key)
 * Product ID (Foreign Key)
 * Quantity
-* Order total
-* Order date
+* Order Total
+* Order Date
 
-Sample dataset:
+### Sample Dataset
+
+The database is automatically seeded with:
 
 * 60 Customers
 * 60 Products
@@ -85,22 +88,37 @@ cd backend
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+### Environment Configuration
+
+The repository contains a `.env.example` file.
+
+Create a new `.env` file by copying the example file:
+
+```powershell
 Copy-Item .env.example .env
 ```
 
-Update the `.env` file with your Groq API key:
+Open the newly created `.env` file and add your Groq API key:
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+PORT=5000
 ```
 
-Seed the database:
+**Note:** The `.env` file is intentionally excluded from version control for security reasons. Only `.env.example` is included in the repository.
+
+### Database Setup
+
+Seed the database with sample data:
 
 ```powershell
 python seed.py
 ```
 
-Start the Flask server:
+### Start Backend Server
 
 ```powershell
 python app.py
@@ -114,9 +132,9 @@ http://localhost:5000
 
 ---
 
-### Frontend Setup
+## Frontend Setup
 
-Open a second terminal while keeping the backend terminal running.
+Open a second terminal while keeping the backend server running.
 
 Execute:
 
@@ -132,18 +150,31 @@ The frontend application runs on:
 http://localhost:5173
 ```
 
-The frontend communicates with the Flask backend through API endpoints.
-
 ---
 
 ## Running the Application
 
-Both servers must be running simultaneously:
+Both servers must be running simultaneously.
 
-* Terminal 1 → Flask Backend (`http://localhost:5000`)
-* Terminal 2 → React Frontend (`http://localhost:5173`)
+### Terminal 1
 
-After starting both servers, open:
+Run the Flask backend:
+
+```powershell
+cd backend
+python app.py
+```
+
+### Terminal 2
+
+Run the React frontend:
+
+```powershell
+cd frontend
+npm run dev
+```
+
+After both servers start successfully, open:
 
 ```text
 http://localhost:5173
@@ -168,9 +199,9 @@ in your browser.
 
 * Only read-only SQL operations (`SELECT`, `WITH`) are permitted.
 * Data modification statements such as `INSERT`, `UPDATE`, `DELETE`, `DROP`, and `ALTER` are blocked.
-* SQLite is opened in query-only mode for additional security.
-* Query results are limited to 1000 rows to maintain performance.
-* Browser-based session history is maintained locally for the current session.
+* SQLite is opened in query-only mode to provide an additional layer of security.
+* Query results are limited to 1000 rows to maintain application performance.
+* Browser-based query history is maintained locally for the current session.
 
 ---
 
@@ -178,11 +209,28 @@ in your browser.
 
 Potential enhancements include:
 
-* SQL AST parsing for advanced validation.
+* SQL AST parsing for advanced query validation.
 * User authentication and authorization.
-* Query caching for repeated requests.
-* Exporting query results as CSV files.
+* Query result export as CSV.
 * Server-side query history persistence.
-* Pagination for large result sets.
+* Query caching for repeated requests.
+* Pagination support for large result sets.
+* Advanced analytics and visualizations.
 
 ---
+
+## Repository
+
+Clone the repository using:
+
+```bash
+git clone https://github.com/Elone-debug/natural-language-to-sql-engine.git
+```
+
+---
+
+## Author
+
+**Elbin Sojan**
+
+B.Tech Computer Science Engineering Graduate (2026)
